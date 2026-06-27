@@ -229,3 +229,61 @@ export const unbanUserInDatastore = async (universeId: string | number, userId: 
         return false;
     }
 };
+
+export const fetchDatastoreEntry = async (universeId: string | number, datastoreName: string, entryKey: string): Promise<any | null> => {
+    try {
+        const apiKey = process.env.ROBLOX_API_KEY;
+        if (!apiKey || apiKey === 'paste_your_open_cloud_api_key_here') {
+            console.error('[Roblox API] Missing or invalid ROBLOX_API_KEY in .env');
+            return null;
+        }
+
+        const response = await axios.get(
+            `https://apis.roblox.com/datastores/v1/universes/${universeId}/standard-datastores/datastore/entries/entry?datastoreName=${datastoreName}&entryKey=${entryKey}`,
+            {
+                headers: {
+                    'x-api-key': apiKey
+                }
+            }
+        );
+
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+            return null; // Entry doesn't exist
+        }
+        console.error('[Roblox API Fetch Datastore Error]', error.response?.data || error.message || error);
+        return null;
+    }
+};
+
+export const updateDatastoreEntry = async (universeId: string | number, datastoreName: string, entryKey: string, payload: any): Promise<boolean> => {
+    try {
+        const apiKey = process.env.ROBLOX_API_KEY;
+        if (!apiKey || apiKey === 'paste_your_open_cloud_api_key_here') {
+            console.error('[Roblox API] Missing or invalid ROBLOX_API_KEY in .env');
+            return false;
+        }
+
+        const payloadString = JSON.stringify(payload);
+        const md5Hash = require('crypto').createHash('md5').update(payloadString).digest('base64');
+
+        const response = await axios.post(
+            `https://apis.roblox.com/datastores/v1/universes/${universeId}/standard-datastores/datastore/entries/entry?datastoreName=${datastoreName}&entryKey=${entryKey}`,
+            payloadString,
+            {
+                headers: {
+                    'x-api-key': apiKey,
+                    'Content-Type': 'application/json',
+                    'content-md5': md5Hash
+                }
+            }
+        );
+
+        return response.status === 200;
+    } catch (error: any) {
+        console.error('[Roblox API Update Datastore Error]', error.response?.data || error.message || error);
+        return false;
+    }
+};
+
