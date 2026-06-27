@@ -1,4 +1,4 @@
-import { readdirSync } from 'fs';
+import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
 import { StarbotClient } from '../client/StarbotClient';
 import { Command } from '../utils/types';
@@ -7,7 +7,9 @@ export const loadCommands = (client: StarbotClient) => {
     const commandsPath = join(__dirname, '../commands');
     
     // Read category folders inside src/commands
-    const commandFolders = readdirSync(commandsPath);
+    const commandFolders = readdirSync(commandsPath).filter(folder => 
+        statSync(join(commandsPath, folder)).isDirectory()
+    );
 
     for (const folder of commandFolders) {
         const categoryPath = join(commandsPath, folder);
