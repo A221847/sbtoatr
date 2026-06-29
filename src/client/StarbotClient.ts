@@ -22,5 +22,18 @@ export class StarbotClient extends Client {
         
         this.player = new Player(this);
         this.player.extractors.loadMulti(DefaultExtractors);
+
+        // Debugging player errors
+        this.player.events.on('error', (queue, error) => {
+            console.error(`[Player Error] General error in queue: ${error.message}`);
+        });
+
+        this.player.events.on('playerError', (queue, error) => {
+            console.error(`[Player Error] Audio player error: ${error.message}`);
+        });
+        
+        this.player.events.on('disconnect', (queue) => {
+            console.log(`[Player] Disconnected from voice channel.`);
+        });
     }
 }
