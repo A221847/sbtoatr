@@ -25,6 +25,13 @@ const client = new StarbotClient();
 loadCommands(client);
 loadEvents(client);
 
+// Load extractors for discord-player (youtube-ext, etc)
+client.player.extractors.loadDefault().then(() => {
+    console.log('[Player] Extractors loaded successfully.');
+}).catch(err => {
+    console.error('[Player] Failed to load extractors:', err);
+});
+
 // Log in to Discord
 client.login(process.env.DISCORD_TOKEN).catch(err => {
     console.error('[Error] Failed to login. Please check your DISCORD_TOKEN in .env', err);

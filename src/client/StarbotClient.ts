@@ -1,6 +1,5 @@
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { Player } from 'discord-player';
-import { DefaultExtractors } from '@discord-player/extractor';
 import { Command } from '../utils/types';
 
 export class StarbotClient extends Client {
@@ -21,7 +20,6 @@ export class StarbotClient extends Client {
         this.cooldowns = new Collection();
         
         this.player = new Player(this);
-        this.player.extractors.loadMulti(DefaultExtractors);
 
         // Debugging player errors
         this.player.events.on('error', (queue, error) => {
