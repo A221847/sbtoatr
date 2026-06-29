@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 import { StarbotClient } from './client/StarbotClient';
 import { loadCommands } from './handlers/commandHandler';
 import { loadEvents } from './handlers/eventHandler';
+import { DefaultExtractors } from '@discord-player/extractor';
 import express from 'express';
 
 // Load environment variables from .env file
@@ -19,20 +20,23 @@ app.listen(port, () => {
     console.log(`[Web] Dummy web server is listening on port ${port}`);
 });
 
-const client = new StarbotClient();
+async function main() {
+    const client = new StarbotClient();
 
-// Load handlers
-loadCommands(client);
-loadEvents(client);
+    // Load handlers
+    loadCommands(client);
+    loadEvents(client);
 
-// Load extractors for discord-player (youtube-ext, etc)
-client.player.extractors.loadDefault().then(() => {
-    console.log('[Player] Extractors loaded successfully.');
-}).catch(err => {
-    console.error('[Player] Failed to load extractors:', err);
-});
+    // Load extractors for discord-player BEFORE logging in
+    await client.player.extractors.loadMulti(DefaultExtractors);
+    console.log('[Player] Extractors loaded:', client.player.extractors.store.map(e => e.identifier).join(', '));
 
-// Log in to Discord
-client.login(process.env.DISCORD_TOKEN).catch(err => {
-    console.error('[Error] Failed to login. Please check your DISCORD_TOKEN in .env', err);
+    // Log in to Discord
+    await client.login(process.env.DISCORD_TOKEN);
+    console.log('[Bot] Starbot is online!');
+}
+
+main().catch(err => {
+    console.error('[Fatal] Failed to start Starbot:', err);
+    process.exit(1);
 });
