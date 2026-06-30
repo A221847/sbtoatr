@@ -27,6 +27,7 @@ const command: Command = {
             const { track } = await client.player.play(channel, query, {
                 nodeOptions: {
                     metadata: interaction,
+                    selfDeaf: false,
                     leaveOnEmpty: false,
                     leaveOnEnd: false,
                     leaveOnStop: false,
