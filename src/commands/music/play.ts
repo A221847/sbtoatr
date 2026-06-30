@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, GuildMember, MessageFlags } from 'discord.js';
 import { StarbotClient } from '../../client/StarbotClient';
 import { Command } from '../../utils/types';
+import { QueryType } from 'discord-player';
 
 const command: Command = {
     data: new SlashCommandBuilder()
@@ -25,7 +26,7 @@ const command: Command = {
 
         try {
             const { track } = await client.player.play(channel, query, {
-                searchEngine: 'soundcloudSearch',
+                searchEngine: QueryType.SOUNDCLOUD_SEARCH,
                 nodeOptions: {
                     metadata: interaction,
                     selfDeaf: false,
