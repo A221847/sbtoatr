@@ -28,11 +28,7 @@ async function main() {
     loadEvents(client);
 
     // Register YoutubeiExtractor (uses YouTube innertube API, works on cloud servers)
-    await client.player.extractors.register(YoutubeiExtractor, {
-        streamOptions: {
-            useClient: 'ANDROID',
-        }
-    });
+    await client.player.extractors.register(YoutubeiExtractor, {});
     console.log('[Player] YoutubeiExtractor loaded successfully.');
 
     // Log in to Discord
