@@ -25,6 +25,7 @@ const command: Command = {
 
         try {
             const { track } = await client.player.play(channel, query, {
+                searchEngine: 'soundcloudSearch',
                 nodeOptions: {
                     metadata: interaction,
                     selfDeaf: false,

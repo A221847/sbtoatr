@@ -27,7 +27,7 @@ async function main() {
     loadCommands(client);
     loadEvents(client);
 
-    // Register default extractors (which will automatically use youtube-ext)
+    // Register DefaultExtractors
     await client.player.extractors.loadMulti(DefaultExtractors);
     console.log('[Player] DefaultExtractors loaded successfully.');
 
