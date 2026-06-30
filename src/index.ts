@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 import { StarbotClient } from './client/StarbotClient';
 import { loadCommands } from './handlers/commandHandler';
 import { loadEvents } from './handlers/eventHandler';
+import play from 'play-dl';
 import express from 'express';
 
 // Load environment variables from .env file
@@ -25,6 +26,15 @@ async function main() {
     // Load handlers
     loadCommands(client);
     loadEvents(client);
+
+    // Initialize play-dl with a free SoundCloud client ID
+    const clientID = await play.getFreeClientID();
+    await play.setToken({
+        soundcloud: {
+            client_id: clientID
+        }
+    });
+    console.log('[Music] SoundCloud client ID initialized.');
 
     // Log in to Discord
     await client.login(process.env.DISCORD_TOKEN);
