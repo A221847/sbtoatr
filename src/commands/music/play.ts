@@ -25,8 +25,11 @@ const command: Command = {
         await interaction.deferReply();
 
         try {
+            const isUrl = query.startsWith('http://') || query.startsWith('https://');
+            const searchEngine = isUrl ? QueryType.AUTO : QueryType.SOUNDCLOUD_SEARCH;
+
             const { track } = await client.player.play(channel, query, {
-                searchEngine: QueryType.SOUNDCLOUD_SEARCH,
+                searchEngine: searchEngine,
                 nodeOptions: {
                     metadata: interaction,
                     selfDeaf: false,

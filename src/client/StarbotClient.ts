@@ -21,13 +21,25 @@ export class StarbotClient extends Client {
         
         this.player = new Player(this);
 
-        // Debug events
+        // ---- Player lifecycle events ----
+
         this.player.events.on('playerStart', (queue, track) => {
             console.log(`[Player] Now playing: ${track.title}`);
+            console.log(`[Player] Track source: ${track.source}`);
+            console.log(`[Player] Track URL: ${track.url}`);
+            console.log(`[Player] Track duration: ${track.duration}`);
         });
 
         this.player.events.on('audioTrackAdd', (queue, track) => {
             console.log(`[Player] Track added to queue: ${track.title}`);
+        });
+
+        this.player.events.on('playerFinish', (queue, track) => {
+            console.log(`[Player] Finished playing: ${track.title}`);
+        });
+
+        this.player.events.on('playerSkip', (queue, track) => {
+            console.log(`[Player] SKIPPED track: ${track.title} (reason: stream could not be extracted or played)`);
         });
 
         this.player.events.on('error', (queue, error) => {
@@ -52,11 +64,9 @@ export class StarbotClient extends Client {
             console.log(`[Player] Voice channel is empty, leaving.`);
         });
 
+        // Full debug output (unfiltered) to catch streaming issues
         this.player.on('debug', (message) => {
-            if (message.toLowerCase().includes('error') || message.toLowerCase().includes('fail')) {
-                console.log(`[Player Debug] ${message}`);
-            }
+            console.log(`[Player Debug] ${message}`);
         });
     }
 }
-
