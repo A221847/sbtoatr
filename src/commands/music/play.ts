@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, GuildMember } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, GuildMember, MessageFlags } from 'discord.js';
 import { StarbotClient } from '../../client/StarbotClient';
 import { Command } from '../../utils/types';
 
@@ -17,7 +17,7 @@ const command: Command = {
         const channel = member.voice.channel;
 
         if (!channel) {
-            await interaction.reply({ content: 'You must be in a voice channel to play music!', ephemeral: true });
+            await interaction.reply({ content: 'You must be in a voice channel to play music!', flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -27,7 +27,6 @@ const command: Command = {
             const { track } = await client.player.play(channel, query, {
                 nodeOptions: {
                     metadata: interaction,
-                    selfDeaf: true,
                     leaveOnEmpty: false,
                     leaveOnEnd: false,
                     leaveOnStop: false,
