@@ -1,21 +1,21 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, MessageFlags } from 'discord.js';
 import { StarbotClient } from '../../client/StarbotClient';
 import { Command } from '../../utils/types';
-import { useQueue } from 'discord-player';
 
 const command: Command = {
     data: new SlashCommandBuilder()
         .setName('skip')
         .setDescription('Skip the current song'),
     execute: async (interaction: ChatInputCommandInteraction, client: StarbotClient) => {
-        const queue = useQueue(interaction.guildId!);
-        
+        const queue = client.getQueue(interaction.guildId!);
+
         if (!queue || !queue.isPlaying()) {
-            return interaction.reply({ content: '❌ | No music is currently playing!', ephemeral: true });
+            return interaction.reply({ content: '❌ | No music is currently playing!', flags: MessageFlags.Ephemeral });
         }
 
-        queue.node.skip();
-        return interaction.reply({ content: '⏭️ | Skipped the current track!' });
+        const skipped = queue.currentTrack?.title || 'Unknown';
+        queue.skip();
+        return interaction.reply({ content: `⏭️ | Skipped **${skipped}**!` });
     }
 };
 

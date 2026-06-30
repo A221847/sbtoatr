@@ -2,7 +2,6 @@ import { config } from 'dotenv';
 import { StarbotClient } from './client/StarbotClient';
 import { loadCommands } from './handlers/commandHandler';
 import { loadEvents } from './handlers/eventHandler';
-import { DefaultExtractors } from '@discord-player/extractor';
 import express from 'express';
 
 // Load environment variables from .env file
@@ -27,10 +26,6 @@ async function main() {
     loadCommands(client);
     loadEvents(client);
 
-    // Register DefaultExtractors
-    await client.player.extractors.loadMulti(DefaultExtractors);
-    console.log('[Player] DefaultExtractors loaded successfully.');
-
     // Log in to Discord
     await client.login(process.env.DISCORD_TOKEN);
     console.log('[Bot] Starbot is online!');
@@ -40,4 +35,3 @@ main().catch(err => {
     console.error('[Fatal] Failed to start Starbot:', err);
     process.exit(1);
 });
-
